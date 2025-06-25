@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <math.h>
+
+// Constant for Pi
+#define PI 3.14159265359
+
+/*
+ * Main function
+ * This program calculates the total surface area and volume of spherical segments
+ * based on user input for radius (R), top height (ha), and bottom height (hb).
+ */
+int main() {
+    int n; // Number of spherical segments to evaluate
+    float R, ha, hb; // Input dimensions
+    float top_area, bottom_area, lateral_area, total_surface_area, volume;
+    float total_area_sum = 0.0, total_volume_sum = 0.0; // For computing averages
+    int valid_segments = 0;
+
+    // Prompt user for number of spherical segments between 2 and 10
+    do {
+        printf("How many spherical segments you want to evaluate [2-10]? \n");
+        scanf("%d", &n);
+    } while (n < 2 || n > 10);
+
+    while (valid_segments < n) {
+        printf("Obtaining data for spherical segment number %d\n", valid_segments + 1);
+
+        // Prompt for input values
+        printf("What is the radius of the sphere (R)? \n");
+        scanf("%f", &R);
+        printf("What is the height of the top area of the spherical segment (ha)? \n");
+        scanf("%f", &ha);
+        printf("What is the height of the bottom area of the spherical segment (hb)? \n");
+        scanf("%f", &hb);
+
+        // Print entered values
+        printf("Entered data: R = %.2f ha = %.2f hb = %.2f.\n", R, ha, hb);
+
+        // Validate input
+        if (R <= 0 || ha <= 0 || hb <= 0 || ha > R || hb > R || ha < hb) {
+            printf("Invalid Input.\n");
+            continue; // Prompt for the same segment again
+        }
+
+        // Compute areas and volume
+        float r1 = sqrt(R * R - ha * ha); // Top radius
+        float r2 = sqrt(R * R - hb * hb); // Bottom radius
+        float h = ha - hb;
+
+        top_area = PI * r1 * r1;
+        bottom_area = PI * r2 * r2;
+        lateral_area = 2 * PI * R * h;
+        total_surface_area = top_area + bottom_area + lateral_area;
+
+        volume = (PI * h / 6.0) * (3 * r1 * r1 + 3 * r2 * r2 + h * h);
+
+        // Print results
+        printf("Total Surface Area = %.2f Volume = %.2f.\n", total_surface_area, volume);
+
+        // Add to total for averages
+        total_area_sum += total_surface_area;
+        total_volume_sum += volume;
+
+        valid_segments++;
+    }
+
+    // Print averages
+    printf("Total average results:\n");
+    printf("Average Surface Area = %.2f Average Volume = %.2f.\n",
+           total_area_sum / n, total_volume_sum / n);
+
+    return 0;
+}
